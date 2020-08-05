@@ -371,7 +371,8 @@ public class Camera {
             break;
           }
           if (af == CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED ||
-                  af == CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED) {
+                  af == CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED ||
+                  af == CaptureResult.CONTROL_AF_STATE_PASSIVE_FOCUSED) {
             Integer ae = result.get(CaptureResult.CONTROL_AE_STATE);
             if (ae == null || ae == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
               setState(STATE_CAPTURING);
