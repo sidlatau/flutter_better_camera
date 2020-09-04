@@ -1,8 +1,5 @@
 package io.flutter.plugins.camera;
 
-import static android.view.OrientationEventListener.ORIENTATION_UNKNOWN;
-import static io.flutter.plugins.camera.CameraUtils.computeBestPreviewSize;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -31,10 +28,7 @@ import android.util.Range;
 import android.util.Size;
 import android.view.OrientationEventListener;
 import android.view.Surface;
-import androidx.annotation.NonNull;
-import io.flutter.plugin.common.EventChannel;
-import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.view.TextureRegistry.SurfaceTextureEntry;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -44,6 +38,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.view.TextureRegistry.SurfaceTextureEntry;
+
+import static android.view.OrientationEventListener.ORIENTATION_UNKNOWN;
+import static io.flutter.plugins.camera.CameraUtils.computePredefinedPreviewSize;
 
 public class Camera {
   /**
@@ -176,8 +178,21 @@ public class Camera {
 
     recordingProfile =
         CameraUtils.getBestAvailableCamcorderProfileForResolutionPreset(cameraName, preset);
-    captureSize = new Size(recordingProfile.videoFrameWidth, recordingProfile.videoFrameHeight);
-    previewSize = computeBestPreviewSize(cameraName, preset);
+//    captureSize = new Size(recordingProfile.videoFrameWidth, recordingProfile.videoFrameHeight);
+//    previewSize = computeBestPreviewSize(cameraName, preset);
+
+    Size[] supportedSizes  =
+            mCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+                    .getOutputSizes(ImageFormat.JPEG);
+
+    ArrayList<Size> goodRatioSizes = new ArrayList<>();
+    for(Size size : supportedSizes) {
+      double aspectRatio = (double) size.getHeight() / (double) size.getWidth();
+      if(aspectRatio == 0.75) {
+        goodRatioSizes.add(size);
+      }
+    }
+    previewSize = captureSize= computePredefinedPreviewSize(cameraName, preset, goodRatioSizes);
   }
 
   private void setBestAERange(CameraCharacteristics characteristics) {

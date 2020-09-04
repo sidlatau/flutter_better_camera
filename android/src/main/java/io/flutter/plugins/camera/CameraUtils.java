@@ -10,7 +10,7 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.CamcorderProfile;
 import android.util.Size;
-import io.flutter.plugins.camera.Camera.ResolutionPreset;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,6 +18,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.flutter.plugins.camera.Camera.ResolutionPreset;
+
+import static java.lang.Math.min;
 
 /** Provides various utilities for camera. */
 public final class CameraUtils {
@@ -116,5 +120,41 @@ public final class CameraUtils {
       return Long.signum(
           (long) lhs.getWidth() * lhs.getHeight() - (long) rhs.getWidth() * rhs.getHeight());
     }
+  }
+
+  static private Size findMaxSize(List<Size> goodRatioSizes) {
+    Size max = new Size(0, 0);
+    for(Size s : goodRatioSizes) {
+      int shortestSide = min(s.getWidth(), s.getHeight());
+      int maxShortestSide = min(max.getWidth(), max.getHeight());
+      if(shortestSide > maxShortestSide) {
+        max = s;
+      }
+    };
+    return max;
+  }
+
+  static private Size findSize(List<Size> goodRatioSizes, int shortestSize) {
+    for(Size s : goodRatioSizes) {
+      int shortestSide = min(s.getWidth(), s.getHeight());
+      if(shortestSide == shortestSize) {
+        return s;
+      }
+    };
+    return goodRatioSizes.get(0);
+  }
+
+  static Size computePredefinedPreviewSize(String cameraName, ResolutionPreset preset, List<Size> goodRatioSizes) {
+    switch (preset) {
+      case max:
+        return  findMaxSize(goodRatioSizes);
+      case ultraHigh:
+        return findSize(goodRatioSizes, 2160);
+      case veryHigh:
+        return findSize(goodRatioSizes, 1080);
+      case high:
+        return findSize(goodRatioSizes, 720);
+    }
+    return findMaxSize(goodRatioSizes);
   }
 }
