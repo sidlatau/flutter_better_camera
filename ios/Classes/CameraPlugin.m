@@ -315,60 +315,19 @@ FourCharCode const videoFormat = kCVPixelFormatType_32BGRA;
 }
 
 - (void)setCaptureSessionPreset:(ResolutionPreset)resolutionPreset {
-  switch (resolutionPreset) {
-    case max:
-      if ([_captureSession canSetSessionPreset:AVCaptureSessionPresetHigh]) {
-        _captureSession.sessionPreset = AVCaptureSessionPresetHigh;
-        _previewSize =
-            CGSizeMake(_captureDevice.activeFormat.highResolutionStillImageDimensions.width,
-                       _captureDevice.activeFormat.highResolutionStillImageDimensions.height);
-        break;
-      }
-    case ultraHigh:
-      if ([_captureSession canSetSessionPreset:AVCaptureSessionPreset3840x2160]) {
-        _captureSession.sessionPreset = AVCaptureSessionPreset3840x2160;
-        _previewSize = CGSizeMake(3840, 2160);
-        break;
-      }
-    case veryHigh:
-      if ([_captureSession canSetSessionPreset:AVCaptureSessionPreset1920x1080]) {
-        _captureSession.sessionPreset = AVCaptureSessionPreset1920x1080;
-        _previewSize = CGSizeMake(1920, 1080);
-        break;
-      }
-    case high:
-      if ([_captureSession canSetSessionPreset:AVCaptureSessionPreset1280x720]) {
-        _captureSession.sessionPreset = AVCaptureSessionPreset1280x720;
-        _previewSize = CGSizeMake(1280, 720);
-        break;
-      }
-    case medium:
-      if ([_captureSession canSetSessionPreset:AVCaptureSessionPreset640x480]) {
-        _captureSession.sessionPreset = AVCaptureSessionPreset640x480;
-        _previewSize = CGSizeMake(640, 480);
-        break;
-      }
-    case low:
-      if ([_captureSession canSetSessionPreset:AVCaptureSessionPreset352x288]) {
-        _captureSession.sessionPreset = AVCaptureSessionPreset352x288;
-        _previewSize = CGSizeMake(352, 288);
-        break;
-      }
-    default:
-      if ([_captureSession canSetSessionPreset:AVCaptureSessionPresetLow]) {
-        _captureSession.sessionPreset = AVCaptureSessionPresetLow;
-        _previewSize = CGSizeMake(352, 288);
-      } else {
-        NSError *error =
-            [NSError errorWithDomain:NSCocoaErrorDomain
-                                code:NSURLErrorUnknown
-                            userInfo:@{
-                              NSLocalizedDescriptionKey :
-                                  @"No capture session available for current capture session."
-                            }];
-        @throw error;
-      }
-  }
+    if ([_captureSession canSetSessionPreset:AVCaptureSessionPresetPhoto]) {
+        _captureSession.sessionPreset = AVCaptureSessionPresetPhoto;
+        _previewSize = CGSizeMake(2880, 2160);
+     } else {
+       NSError *error =
+           [NSError errorWithDomain:NSCocoaErrorDomain
+                               code:NSURLErrorUnknown
+                           userInfo:@{
+                             NSLocalizedDescriptionKey :
+                                 @"No capture session available for current capture session."
+                           }];
+       @throw error;
+     }
 }
 
 - (void)captureOutput:(AVCaptureOutput *)output

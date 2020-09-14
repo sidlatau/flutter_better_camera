@@ -94,7 +94,6 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
                           //controller.setPointOfInterest(scaledPoint);
                         },
                         onZoom: (zoom) {
-                          print('zoom');
                           if (zoom < 11) {
                             controller.zoom(zoom);
                           }
@@ -341,7 +340,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
     }
     controller = CameraController(
       cameraDescription,
-      ResolutionPreset.medium,
+      ResolutionPreset.ultraHigh,
       enableAudio: enableAudio,
     );
 
@@ -533,11 +532,10 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
 class CameraApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return
-      MaterialApp(
-        theme: ThemeData(
-          accentTextTheme: TextTheme(body2: TextStyle(color: Colors.white)),
-        ),
+    return MaterialApp(
+      theme: ThemeData(
+        accentTextTheme: TextTheme(body2: TextStyle(color: Colors.white)),
+      ),
       home: CameraExampleHome(),
     );
   }
@@ -576,7 +574,7 @@ class _ZoomableWidgetState extends State<ZoomableWidget> {
   bool showZoom = false;
   Timer t1;
 
-  bool handleZoom(newZoom){
+  bool handleZoom(newZoom) {
     if (newZoom >= 1) {
       if (newZoom > 10) {
         return false;
@@ -598,11 +596,10 @@ class _ZoomableWidgetState extends State<ZoomableWidget> {
     }
     widget.onZoom(zoom);
     return true;
-
   }
+
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
         onScaleStart: (scaleDetails) {
           print('scalStart');
@@ -646,36 +643,36 @@ class _ZoomableWidgetState extends State<ZoomableWidget> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Align(
-                      alignment: Alignment.bottomCenter,
-                      child:
-                      SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          valueIndicatorTextStyle: TextStyle(
-                              color: Colors.amber, letterSpacing: 2.0, fontSize: 30),
-                          valueIndicatorColor: Colors.blue,
-                          // This is what you are asking for
-                          inactiveTrackColor: Color(0xFF8D8E98),
-                          // Custom Gray Color
-                          activeTrackColor: Colors.white,
-                          thumbColor: Colors.red,
-                          overlayColor: Color(0x29EB1555),
-                          // Custom Thumb overlay Color
-                          thumbShape:
-                          RoundSliderThumbShape(enabledThumbRadius: 12.0),
-                          overlayShape:
-                          RoundSliderOverlayShape(overlayRadius: 20.0),
-
-                        ),
-                        child: Slider(
-                          value: zoom,
-                          onChanged: (double newValue) {
-                            handleZoom(newValue);
-                          },
-                          label: "$zoom",
-                          min: 1,
-                          max: 10,
-                        ),
+                    alignment: Alignment.bottomCenter,
+                    child: SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        valueIndicatorTextStyle: TextStyle(
+                            color: Colors.amber,
+                            letterSpacing: 2.0,
+                            fontSize: 30),
+                        valueIndicatorColor: Colors.blue,
+                        // This is what you are asking for
+                        inactiveTrackColor: Color(0xFF8D8E98),
+                        // Custom Gray Color
+                        activeTrackColor: Colors.white,
+                        thumbColor: Colors.red,
+                        overlayColor: Color(0x29EB1555),
+                        // Custom Thumb overlay Color
+                        thumbShape:
+                            RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                        overlayShape:
+                            RoundSliderOverlayShape(overlayRadius: 20.0),
                       ),
+                      child: Slider(
+                        value: zoom,
+                        onChanged: (double newValue) {
+                          handleZoom(newValue);
+                        },
+                        label: "$zoom",
+                        min: 1,
+                        max: 10,
+                      ),
+                    ),
                   ),
                 ],
               )),
